@@ -1,0 +1,54 @@
+시퀀스(SEQUENCE) : 특정규칙에 맞는 연속 숫자를 생성하는 오라클 객체
+
+생성방법: CREATE SEQUENCE 시퀀스명
+           -- START WITH 숫자 : 시작값(기본값은 1)
+       -- INCREMENT BY 숫자 : 증가값(기본값은 1, 음수로 감소도 가능)
+       -- MAXVALUE 숫자 : 최댓값
+           -- MINVALUE 숫자 : 최솟값
+           -- NOCYCLE : 한계값에 도달했을 때 시퀀스 생성이 멈춤,
+            NOCYCLE 옵션 없다면, 다시 처음부터 시작
+           -- CACHE 숫자 : 시퀀스가 생성하는 번호를 메모리에 미리 할당할 수를 지정,              기본값이 2,
+              1,2,3,4....의 시퀀스가 생성될 때
+         *현재 시퀀스가 1이라면 미리 2와 3, 두 값을 메모리에 미리 할당
+
+DROP  SEQUENCE SEQ0211;
+CREATE SEQUENCE SEQ0211
+START WITH 22001;
+
+시퀀스 사용방법 : 시퀀스명.NEXTVAL(다음 번 시퀀스를 생성),
+SELECT 시퀀스명.CURRVAL( 현재의 시퀀스 값, 마지막으로 생성된 순번)
+FROM DUAL(시스템테이블);
+
+
+예제)
+시퀀스(SEQ_SNACK)를 생성하여 테이블(SNACK)을 만들어봅시다.
+
+NO(숫자 2자리)      NAME(VARCHAR2 10)            PRICE(CHAR 4)
+10                       새우깡                     1000
+20                       감자깡                     1000
+30                       꼬깔콘                     1000
+40                        콘칩                      1000
+50                       고래밥                     1000
+
+
+**주의 품목번호는 반드시 2자리 숫자만 가능.
+  기본키는 품목번호(시퀀스에서 NOCYCLE)
+
+DROP TABLE SNACK;
+CREATE TABLE SNACK(
+        NO NUMBER(2) PRIMARY KEY,
+        NAME varchar2(10),
+        PRICE CHAR(4) );
+
+DROP SEQUENCE SEQ_SNACK;
+CREATE  SEQUENCE SEQ_SNACK
+    START WITH 10
+    INCREMENT BY 10    
+    MAXVALUE 99
+    NOCYCLE;
+
+INSERT INTO SNACK VALUES(SEQ_SNACK.NEXTVAL, '새우깡', '1000');
+INSERT INTO SNACK VALUES(SEQ_SNACK.NEXTVAL, '감자깡', '1000');
+INSERT INTO SNACK VALUES(SEQ_SNACK.NEXTVAL, '꼬깔콘', '1000');
+INSERT INTO SNACK VALUES(SEQ_SNACK.NEXTVAL, '콘칩', '1000');
+INSERT INTO SNACK VALUES(SEQ_SNACK.NEXTVAL, '고래밥', '1000');
