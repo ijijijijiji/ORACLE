@@ -1,0 +1,57 @@
+*  제약조건 CONSTRAINT : 테이블 내의 특정 컬럼(열)에 지정하는 조건. 조건에 부합하지 않는 데이터는 DB에 저장 불가능.
+1) NOT NULL : 지정한 컬럼에 NULL 값을 허용하지 않음. (C)
+2) UNIQUE : 지정한 컬럼에 중복을 허용하지 않음. (U)
+3) PRIMARY KEY : 중복과 NULL 둘 다 허용하지 않음.(P)
+4) FOREIGN KEY : 다른 테이블의 컬럼을 참조할 경우 존재하는 값만 허용 (R)
+5) CHECK : 조건식을 설정할 수 있고, 그 조건을 만족하는 데이터만 허용 (C)
+
+* CONSTRAINT TYPE
+1) C : CHECK, NOT NULL
+2) U : UNIQUE
+3) P : PRIMARY KEY
+4) R : FOREIGN KEY
+
+
+SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE, TABLE_NAME  FROM USER_CONSTRAINTS;
+ -- 현재 계정에 들어있는 모든 테이블의 제약조건을 확인하는 쿼리문
+
+DROP TABLE TBL_NOTNULL;
+CREATE TABLE TBL_NOTNULL(
+             LOGIN_ID VARCHAR2(20) CONSTRAINT ID_NOTNULL  NOT NULL,-- 제약조건에 명칭을 붙인다./ CONSTRAINT 명칭 제약조건
+             LOGIN_PWD VARCHAR2(20) CONSTRAINT PWD_NOTNULL NOT NULL,
+             PHONE VARCHAR2(20)
+             );
+
+INSERT INTO TBL_NOTNULL VALUES ('ABCDE','ABCDE','');
+
+ALTER TABLE TBL_NOTNULL MODIFY(PHONE PRIMARY KEY);
+--PHONE 컬럼에 제약조건(기본키)을 추가하려 했으나, NULL 값이 들어있어 오류생성
+--이미 생성된 테이블에 제약조건을 추가하려면, 제약조건에 위배되는 데이터가 존재하지 않아야한다.
+
+ALTER TABLE TBL_NOTNULL MODIFY(LOGIN_ID CONSTRAINT ID_PK PRIMARY KEY);
+--LOGIN_ID에 ID_PK라는 이름으로 기본키 제약조건 추가생성
+
+ALTER TABLE 테이블명 DROP CONSTRAINT 제약조건명칭; --제약조건 삭제
+
+
+* UNIQUE :  중복을 허락하지 않는 제약조건(NULL 얼마든지 허용)
+
+* FOREIGN KEY : 서로 다른 테이블간에 관계를 정의하는데 사용하는 제약조건.(서로 다른 테이블에 공통으로 갖고 있는 컬럼)
+
+
+서로 다른 두 테이블에,,
+1) 컬럼명은 동일, 데이터는 서로 상이.
+2) 컬럼명은 상이, 데이터는 서로 동일.(0)
+
+
+*CHECK : 조건식을 설정할 수 있고, 그 조건을 만족하는 데이터만 허용하는 제약조건.(C)
+
+CREATE TABLE IT_SUNGIL(
+                IT_CODE    NUMBER(2) primary key,
+                IT_NAME VARCHAR2(20) UNIQUE CONSTRAINT 제약조건명칭 CHECK (LENGTH(IT_NAME)<10),
+            --IT_NAME 글자수를 10자 이내로 제한
+
+                SCHOOL VARCHAR2(20) NOT NULL
+                );
+
+SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE, TABLE_NAME  FROM USER_CONSTRAINTS;
